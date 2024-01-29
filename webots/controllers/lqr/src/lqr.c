@@ -371,8 +371,8 @@ void care_sda(const _lqr *lqr, _sda *sda){
         calculate_norm(n_lqr_state, n_lqr_state, sda->H_hat_last, &norm_H_hat_last);
         calculate_norm(n_lqr_state, n_lqr_state, sda->H_hat_new, &norm_H_hat_now);
 
-        printf("norm of H_hat_last: %.3lf\n", norm_H_hat_last);
-        printf("norm of H_hat_now : %.3lf\n", norm_H_hat_now);
+        // printf("norm of H_hat_last: %.3lf\n", norm_H_hat_last);
+        // printf("norm of H_hat_now : %.3lf\n", norm_H_hat_now);
 
         double difference_norm = fabs(norm_H_hat_now - norm_H_hat_last);
         if (difference_norm > 0.1){
@@ -624,43 +624,11 @@ double LQR_realize(int i){
         key = wb_keyboard_get_key();
     }
 
-    // plan position
-    if (ekf.true_state.position_z > 0.016){
-        if (lqr.flag == 0){
-            lqr.t_off = i * Ts + t0;
-        }
-
-        lqr.flag = 1;
-        printf("t_off: %lf\n", lqr.t_off);
-        lqr.position_x_desired = 0;
-        lqr.position_y_desired = 0;
-        lqr.position_z_desired = lqr.velocity_z_desired * (time - lqr.t_off) + 0.015;
-
-    } else if (ekf.true_state.position_z <= 0.016){
-        lqr.position_x_desired = 1.0;
-        lqr.position_y_desired = 1.0;
-        lqr.position_z_desired = 0.016;
-    }
-
-    archive.position_x_desired[i] = lqr.position_x_desired;
-    printf("desired x position: %lf\n", lqr.position_x_desired);
-
-    archive.position_y_desired[i] = lqr.position_y_desired;
-    printf("desired y position: %lf\n", lqr.position_y_desired);
-
-    archive.position_z_desired[i] = lqr.position_z_desired;
-    printf("desired z position: %lf\n", lqr.position_z_desired);
-
     // plan velocity
-    if (ekf.true_state.position_z > 0.016){
+    lqr.t_off = 1.77;
 
-        lqr.velocity_x_desired = lqr.radius * lqr.circum_angular_velocity * cos(lqr.circum_angular_velocity * (time - lqr.t_off) );
-        lqr.velocity_y_desired = lqr.radius * lqr.circum_angular_velocity * (-sin(lqr.circum_angular_velocity * (time - lqr.t_off) + PI));
-
-    } else if (ekf.true_state.position_z <= 0.016){
-        lqr.velocity_x_desired = 0.0;
-        lqr.velocity_y_desired = 0.0;
-    }
+    lqr.velocity_x_desired = 0.02;
+    lqr.velocity_y_desired = 0.02;
     
     archive.velocity_x_desired[i] = lqr.velocity_x_desired;
     printf("desired x velocity: %lf\n", lqr.velocity_x_desired);
@@ -671,6 +639,33 @@ double LQR_realize(int i){
     archive.velocity_z_desired[i] = lqr.velocity_z_desired;
     printf("desired z velocity: %lf\n", lqr.velocity_z_desired);
 
+    // plan position
+    lqr.position_x_desired = lqr.velocity_x_desired * (time - lqr.t_off);
+    lqr.position_y_desired = lqr.velocity_y_desired * (time - lqr.t_off);
+    lqr.position_z_desired = lqr.velocity_z_desired * (time - lqr.t_off) + 0.015;
+
+    archive.position_x_desired[i] = lqr.position_x_desired;
+    printf("desired x position: %lf\n", lqr.position_x_desired);
+
+    archive.position_y_desired[i] = lqr.position_y_desired;
+    printf("desired y position: %lf\n", lqr.position_y_desired);
+
+    archive.position_z_desired[i] = lqr.position_z_desired;
+    printf("desired z position: %lf\n", lqr.position_z_desired);
+
+    lqr.state_desired[0] = 0;                       // desired roll angle of drone
+    lqr.state_desired[1] = 0;                       // desired pitch angle of drone
+    lqr.state_desired[2] = 0;                       // desired yaw angle of drone
+    lqr.state_desired[3] = 0;                       // desired x-axis angular velocity of drone
+    lqr.state_desired[4] = 0;                       // desired y-axis angular velocity of drone
+    lqr.state_desired[5] = 0;                       // desired z-axis angular velocity of drone
+    lqr.state_desired[6] = lqr.velocity_x_desired;  // desired i-axis velocity of drone represented in body frame
+    lqr.state_desired[7] = lqr.velocity_y_desired;  // desired j-axis velocity of drone represented in body frame
+    lqr.state_desired[8] = lqr.velocity_z_desired;  // desired k-axis velocity of drone represented in body frame
+    lqr.state_desired[9] = lqr.position_x_desired;  // desired x-axis position of drone
+    lqr.state_desired[10] = lqr.position_y_desired; // desired y-axis position of drone
+    lqr.state_desired[11] = lqr.position_z_desired; // desired z-axis position of drone
+    
     get_A(&ekf.estimated_state, &ekf.state1, lqr.A); // get state matrix of state equation
     printf("A:\n");
     for (int j = 0; j < n_lqr_state; j++) {
@@ -724,13 +719,6 @@ double LQR_realize(int i){
     /* inv(R) * transpose(B) */
     double temp31[n_lqr_out][n_lqr_state];
     matrix_multi((double *)temp31, (double *)inv_R, (double *)B_T, n_lqr_out, n_lqr_out, n_lqr_state);
-    printf("temp31:\n");
-    for (int j = 0; j < n_lqr_out; j++) {
-        for (int k = 0; k < n_lqr_state; k++) {
-            printf("%-7.2f ", temp31[j][k]);
-        }
-        printf("\n");
-    }
 
     /* K = inv(R) * transpose(B) * X */
     matrix_multi((double *)lqr.K, (double *)temp31, (double *)sda.X, n_lqr_out, n_lqr_state, n_lqr_state);
@@ -751,26 +739,13 @@ double LQR_realize(int i){
     }
     printf("]\n");
 
-    lqr.state_desired[0] = 0;                       // desired roll angle of drone
-    lqr.state_desired[1] = 0;                       // desired pitch angle of drone
-    lqr.state_desired[2] = 0;                       // desired yaw angle of drone
-    lqr.state_desired[3] = 0;                       // desired x-axis angular velocity of drone
-    lqr.state_desired[4] = 0;                       // desired y-axis angular velocity of drone
-    lqr.state_desired[5] = 0;                       // desired z-axis angular velocity of drone
-    lqr.state_desired[6] = lqr.velocity_x_desired;  // desired i-axis velocity of drone represented in body frame
-    lqr.state_desired[7] = lqr.velocity_y_desired;  // desired j-axis velocity of drone represented in body frame
-    lqr.state_desired[8] = lqr.velocity_z_desired;  // desired k-axis velocity of drone represented in body frame
-    lqr.state_desired[9] = lqr.position_x_desired;  // desired x-axis position of drone
-    lqr.state_desired[10] = lqr.position_y_desired; // desired y-axis position of drone
-    lqr.state_desired[11] = lqr.position_z_desired; // desired z-axis position of drone
-
     printf("\nlqr desired state:\n[");
     printf("%.3lf", lqr.state_desired[0]);
     for (int j = 1; j < n_lqr_state; j++){
         printf(" %.3lf", lqr.state_desired[j]);
     }
     printf("]\n");
-
+    
     double state_error[n_lqr_state];
     for (int j = 0; j < n_lqr_state; j++) {
         state_error[j] = lqr.state[j] - lqr.state_desired[j];
