@@ -1,0 +1,38 @@
+[
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/ekf.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/ekf.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/ekf.c",
+  "output": "CMakeFiles/lqr.dir/src/ekf.c.obj"
+},
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/lqr.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/lqr.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/lqr.c",
+  "output": "CMakeFiles/lqr.dir/src/lqr.c.obj"
+},
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/main.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/main.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/main.c",
+  "output": "CMakeFiles/lqr.dir/src/main.c.obj"
+},
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/pid.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/pid.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/pid.c",
+  "output": "CMakeFiles/lqr.dir/src/pid.c.obj"
+},
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/savefile.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/savefile.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/savefile.c",
+  "output": "CMakeFiles/lqr.dir/src/savefile.c.obj"
+},
+{
+  "directory": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/build",
+  "command": "E:/Webots/msys64/mingw64/bin/cc.exe  @CMakeFiles/lqr.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles/lqr.dir/src/src.c.obj -c D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/src.c",
+  "file": "D:/graduate/vsCode/C/ekf-lqr-quadrotor-control/webots/controllers/lqr/src/src.c",
+  "output": "CMakeFiles/lqr.dir/src/src.c.obj"
+}
+]

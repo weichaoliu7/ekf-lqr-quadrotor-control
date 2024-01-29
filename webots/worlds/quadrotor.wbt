@@ -1,0 +1,45 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/bitcraze/crazyflie/protos/Crazyflie.proto"
+
+WorldInfo {
+  info [
+    "An example of hot to solve the Inverted Pendulum problem using a PID controller"
+  ]
+  title "Inverted Pendulum"
+  basicTimeStep 10
+  contactProperties [
+    ContactProperties {
+      material1 "robot_basis"
+      material2 "floor"
+      coulombFriction [
+        0.2
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.2021917339674151 0.9159021941679318 0.34675881161640015 1.1338509065501505
+  position -0.9394080769997353 -0.448609911157482 1.9859255437735295
+  follow "robot:sliderjoint"
+}
+Floor {
+  size 20 20
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/checkered_marble.jpg"
+      ]
+    }
+    roughness 1
+    metalness 0
+  }
+}
+TexturedBackground {
+  luminosity 10
+}
+Crazyflie {
+  controller "lqr"
+}
