@@ -25,7 +25,6 @@ typedef struct{
     double radius;                  // radius of circular trajectory
     double circum_angular_velocity; // circumferential angular velocity
     double t_off;                   // ground leaving time
-    double t_1;
     int flag;
     int flag1;
     double A[n_lqr_state][n_lqr_state];       // state matrix for state equation
@@ -38,9 +37,9 @@ typedef struct{
     double state[n_lqr_state];
     double state_desired[n_lqr_state];
     double K[n_lqr_out][n_lqr_state];
+    double control[n_lqr_out];
     double control_feedforward[n_lqr_out];
     double control_feedback[n_lqr_out];
-    double control[n_lqr_out];
 } _lqr;
 
 typedef struct{

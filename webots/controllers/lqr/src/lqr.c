@@ -569,7 +569,6 @@ void LQR_init(){
     lqr.position_z_desired = 0.016;
     lqr.velocity_x_desired = 0.0;
     lqr.velocity_y_desired = 0.0;
-    lqr.velocity_z_desired = 0.05;
     lqr.flag = 0;
     sda.gamma = 2.4; // parameter in the Cayley transform
 }
@@ -627,9 +626,16 @@ double LQR_realize(int i){
     // plan velocity
     lqr.t_off = 1.77;
 
-    lqr.velocity_x_desired = 0.02;
-    lqr.velocity_y_desired = 0.02;
-    
+    if (time >= lqr.t_off){
+        lqr.velocity_x_desired = 0.02;
+        lqr.velocity_y_desired = 0.02;
+        lqr.velocity_z_desired = 0.05;
+    } else if (time < lqr.t_off){
+        lqr.velocity_x_desired = 0.0;
+        lqr.velocity_y_desired = 0.0;
+        lqr.velocity_z_desired = 0.0;
+    }
+
     archive.velocity_x_desired[i] = lqr.velocity_x_desired;
     printf("desired x velocity: %lf\n", lqr.velocity_x_desired);
 
@@ -822,9 +828,9 @@ double LQR_realize(int i){
         printf("control_yaw: %lf\n", controller.control_yaw);
 
         double c1 = 3.0;
-        double c2 = 0.0004;
-        double c3 = 0.0004;
-        double c4 = 0.0004;
+        double c2 = 0.001;
+        double c3 = 0.001;
+        double c4 = 0.001;
 
         // input value for front right motor of the quadcopter
         controller.front_right_motor_input = controller.k_vertical_thrust + c1 * controller.control_altitude + c2 * ( + controller.control_roll) + c3 * ( + controller.control_pitch) + c4 * ( + controller.control_yaw);
