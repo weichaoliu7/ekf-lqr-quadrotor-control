@@ -74,11 +74,6 @@ double PID_realize(int i){
 
     const double time = wb_robot_get_time(); // in seconds
 
-    // perturbation of control algorithm by keyboard input
-    controller.roll_disturbance = 0.0;  // perturbation of roll angle by keyboard input
-    controller.pitch_disturbance = 0.0; // perturbation of pitch angle by keyboard input
-    controller.yaw_disturbance = 0.0;   // perturbation of yaw angle by keyboard input
-
     wb_keyboard_enable(TIME_STEP);
     int key = wb_keyboard_get_key();
     while (key > 0){

@@ -32,12 +32,15 @@ void get_A(const state_variable *state, const system_state *state1, double A[n_l
     A[0][0] = state1->angular_velocity_y * cos(state->roll) * tan(state->pitch) - state1->angular_velocity_z * tan(state->pitch) * sin(state->roll);
     A[0][1] = state1->angular_velocity_z * cos(state->roll) * (pow(tan(state->pitch), 2) + 1) +
               state1->angular_velocity_y * sin(state->roll) * (tan(state->pitch) * tan(state->pitch) + 1);
-
+    A[0][2] = 0;
     A[0][3] = 1;
     A[0][4] = tan(state->pitch) * sin(state->roll);
     A[0][5] = cos(state->roll) * tan(state->pitch);
 
     A[1][0] = -state1->angular_velocity_z * cos(state->roll) - state1->angular_velocity_y * sin(state->roll);
+    A[1][1] = 0;
+    A[1][2] = 0;
+    A[1][3] = 0;
     A[1][4] = cos(state->roll);
     A[1][5] = -sin(state->roll);
 
@@ -45,67 +48,31 @@ void get_A(const state_variable *state, const system_state *state1, double A[n_l
               (state1->angular_velocity_z * sin(state->roll)) / cos(state->pitch);
     A[2][1] = (state1->angular_velocity_z * cos(state->roll) * sin(state->pitch)) / pow(cos(state->pitch), 2) +
               (state1->angular_velocity_y * sin(state->pitch) * sin(state->roll)) / pow(cos(state->pitch), 2);
+    A[2][2] = 0;
+    A[2][3] = 0;
     A[2][4] = sin(state->roll) / cos(state->pitch);
     A[2][5] = cos(state->roll) / cos(state->pitch);
 
+    A[3][0] = 0;
+    A[3][1] = 0;
+    A[3][2] = 0;
+    A[3][3] = 0;
     A[3][4] = (state1->angular_velocity_z * (I_y - I_z)) / I_x;
     A[3][5] = (state1->angular_velocity_y * (I_y - I_z)) / I_x;
 
+    A[4][0] = 0;
+    A[4][1] = 0;
+    A[4][2] = 0;
     A[4][3] = -(state1->angular_velocity_z * (I_x - I_z)) / I_y;
+    A[4][4] = 0;
     A[4][5] = -(state1->angular_velocity_x * (I_x - I_z)) / I_y;
 
+    A[5][0] = 0;
+    A[5][1] = 0;
+    A[5][2] = 0;
     A[5][3] = (state1->angular_velocity_y * (I_x - I_y)) / I_z;
     A[5][4] = (state1->angular_velocity_x * (I_x - I_y)) / I_z;
-
-    A[6][1] = -g * cos(state->pitch);
-    A[6][4] = -state->velocity_k;
-    A[6][5] = state->velocity_j;
-    A[6][7] = state1->angular_velocity_z;
-    A[6][8] = -state1->angular_velocity_y;
-
-    A[7][0] = g * cos(state->pitch) * cos(state->roll);
-    A[7][1] = -g * sin(state->pitch) * sin(state->roll);
-    A[7][3] = state->velocity_k;
-    A[7][5] = -state->velocity_i;
-    A[7][6] = -state1->angular_velocity_z;
-    A[7][8] = state1->angular_velocity_x;
-
-    A[8][0] = -g * cos(state->pitch) * sin(state->roll);
-    A[8][1] = -g * cos(state->roll) * sin(state->pitch);
-    A[8][3] = -state->velocity_j;
-    A[8][4] = state->velocity_i;
-    A[8][6] = state1->angular_velocity_y;
-    A[8][7] = -state1->angular_velocity_x;
-
-    A[9][0] = state->velocity_j * (sin(state->roll) * sin(state->yaw) + cos(state->roll) * cos(state->yaw) * sin(state->pitch)) +
-              state->velocity_k * (cos(state->roll) * sin(state->yaw) - cos(state->yaw) * sin(state->pitch) * sin(state->roll));
-    A[9][1] = state->velocity_k * cos(state->pitch) * cos(state->roll) * cos(state->yaw) -
-              state->velocity_i * cos(state->yaw) * sin(state->pitch) +
-              state->velocity_j * cos(state->pitch) * cos(state->yaw) * sin(state->roll);
-    A[9][2] = state->velocity_k * (cos(state->yaw) * sin(state->roll) - cos(state->roll) * sin(state->pitch) * sin(state->yaw)) -
-              state->velocity_j * (cos(state->roll) * cos(state->yaw) + sin(state->pitch) * sin(state->roll) * sin(state->yaw)) -
-              state->velocity_i * cos(state->pitch) * sin(state->yaw);
-    A[9][6] = cos(state->pitch) * cos(state->yaw);
-    A[9][7] = cos(state->yaw) * sin(state->pitch) * sin(state->roll) - cos(state->roll) * sin(state->yaw);
-    A[9][8] = sin(state->roll) * sin(state->yaw) + cos(state->roll) * cos(state->yaw) * sin(state->pitch);
-
-    A[10][0] = state->velocity_k * (cos(state->roll) * cos(state->yaw) - sin(state->pitch) * sin(state->roll) * sin(state->yaw)) -
-               state->velocity_j * (cos(state->yaw) * sin(state->roll) - cos(state->roll) * sin(state->pitch) * sin(state->yaw));
-    A[10][1] = state->velocity_k * cos(state->pitch) * cos(state->roll) * sin(state->yaw) -
-               state->velocity_i * sin(state->pitch) * sin(state->yaw) +
-               state->velocity_j * cos(state->pitch) * sin(state->roll) * sin(state->yaw);
-    A[10][2] = state->velocity_i * cos(state->pitch) * cos(state->yaw) -
-               state->velocity_k * (sin(state->roll) * sin(state->yaw) - cos(state->roll) * cos(state->yaw) * sin(state->pitch)) -
-               state->velocity_j * (cos(state->roll) * sin(state->yaw) - cos(state->yaw) * sin(state->pitch) * sin(state->roll));
-    A[10][6] = cos(state->pitch) * sin(state->yaw);
-    A[10][7] = cos(state->roll) * cos(state->yaw) + sin(state->pitch) * sin(state->roll) * sin(state->yaw);
-    A[10][8] = cos(state->yaw) * sin(state->roll) + cos(state->roll) * sin(state->pitch) * sin(state->yaw);
-
-    A[11][0] = state->velocity_j * cos(state->pitch) * cos(state->roll) - state->velocity_k * cos(state->pitch) * sin(state->roll);
-    A[11][1] = -state->velocity_i * cos(state->pitch) - state->velocity_k * cos(state->roll) * sin(state->pitch) - state->velocity_j * sin(state->pitch) * sin(state->roll);
-    A[11][6] = -sin(state->pitch);
-    A[11][7] = cos(state->pitch) * sin(state->roll);
-    A[11][8] = cos(state->pitch) * cos(state->roll);
+    A[5][5] = 0;
 
 }
 
@@ -116,12 +83,6 @@ void get_lqr_state(const state_variable *state, const system_state *state1, doub
     state_lqr[3] = state1->angular_velocity_x; // x-axis angular velocity of drone
     state_lqr[4] = state1->angular_velocity_y; // y-axis angular velocity of drone
     state_lqr[5] = state1->angular_velocity_z; // z-axis angular velocity of drone
-    state_lqr[6] = state->velocity_i;          // i-axis velocity of drone represented in body frame
-    state_lqr[7] = state->velocity_j;          // j-axis velocity of drone represented in body frame
-    state_lqr[8] = state->velocity_k;          // k-axis velocity of drone represented in body frame
-    state_lqr[9] = state->position_x;          // x-axis position of drone
-    state_lqr[10] = state->position_y;         // y-axis position of drone
-    state_lqr[11] = state->position_z;         // z-axis position of drone
 }
 
 // Structure-preserving Doubling Algorithm
@@ -509,15 +470,11 @@ void LQR_init(){
 
     // weight matrix Q
     lqr.Q[0][0] = 3000;   // yaw angle
-    lqr.Q[1][1] = 10;     // x-axis angular velocity
-    lqr.Q[2][2] = 10;     // y-axis angular velocity
-    lqr.Q[3][3] = 500;    // z-axis angular velocity
-    lqr.Q[4][4] = 1000;   // i-axis velocity represented in body frame
-    lqr.Q[5][5] = 1000;   // j-axis velocity represented in body frame
-    lqr.Q[6][6] = 1000;   // k-axis velocity represented in body frame
-    lqr.Q[7][7] = 5000;   // x-axis position
-    lqr.Q[8][8] = 5000;   // y-axis position
-    lqr.Q[9][9] = 5000;   // z-axis position
+    lqr.Q[1][1] = 3000;   // yaw angle
+    lqr.Q[2][2] = 3000;   // yaw angle
+    lqr.Q[3][3] = 500;     // x-axis angular velocity
+    lqr.Q[4][4] = 500;     // y-axis angular velocity
+    lqr.Q[5][5] = 500;    // z-axis angular velocity
 
     printf("Q:\n");
     for (int j = 0; j < n_lqr_observation; j++) {
@@ -564,11 +521,6 @@ void LQR_init(){
         printf("\n");
     }
 
-    lqr.position_x_desired = 0.0;
-    lqr.position_y_desired = 0.0;
-    lqr.position_z_desired = 0.016;
-    lqr.velocity_x_desired = 0.0;
-    lqr.velocity_y_desired = 0.0;
     lqr.flag = 0;
     sda.gamma = 2.4; // parameter in the Cayley transform
 }
@@ -584,93 +536,12 @@ double LQR_realize(int i){
 
     const double time = wb_robot_get_time(); // in seconds
 
-    // perturbation of control algorithm by keyboard input
-    controller.roll_disturbance = 0.0;  // perturbation of roll angle by keyboard input
-    controller.pitch_disturbance = 0.0; // perturbation of pitch angle by keyboard input
-    controller.yaw_disturbance = 0.0;   // perturbation of yaw angle by keyboard input
-
-    wb_keyboard_enable(TIME_STEP);
-    int key = wb_keyboard_get_key();
-    while (key > 0){
-        switch (key){
-        case WB_KEYBOARD_UP:
-            controller.pitch_disturbance = -2.0;
-            break;
-        case WB_KEYBOARD_DOWN:
-            controller.pitch_disturbance = 2.0;
-            break;
-        case WB_KEYBOARD_RIGHT:
-            controller.yaw_disturbance = -1.3;
-            break;
-        case WB_KEYBOARD_LEFT:
-            controller.yaw_disturbance = 1.3;
-            break;
-        case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_RIGHT):
-            controller.roll_disturbance = -1.0;
-            break;
-        case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_LEFT):
-            controller.roll_disturbance = 1.0;
-            break;
-        case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_UP):
-            lqr.position_z_desired += 0.05;
-            printf("desired altitude: %f [m]\n", lqr.position_z_desired);
-            break;
-        case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_DOWN):
-            lqr.position_z_desired -= 0.05;
-            printf("desired altitude: %f [m]\n", lqr.position_z_desired);
-            break;
-        }
-        key = wb_keyboard_get_key();
-    }
-
-    // plan velocity
-    lqr.t_off = 1.77;
-
-    if (time >= lqr.t_off){
-        lqr.velocity_x_desired = 0.02;
-        lqr.velocity_y_desired = 0.02;
-        lqr.velocity_z_desired = 0.05;
-    } else if (time < lqr.t_off){
-        lqr.velocity_x_desired = 0.0;
-        lqr.velocity_y_desired = 0.0;
-        lqr.velocity_z_desired = 0.0;
-    }
-
-    archive.velocity_x_desired[i] = lqr.velocity_x_desired;
-    printf("desired x velocity: %lf\n", lqr.velocity_x_desired);
-
-    archive.velocity_y_desired[i] = lqr.velocity_y_desired;
-    printf("desired y velocity: %lf\n", lqr.velocity_y_desired);
-
-    archive.velocity_z_desired[i] = lqr.velocity_z_desired;
-    printf("desired z velocity: %lf\n", lqr.velocity_z_desired);
-
-    // plan position
-    lqr.position_x_desired = lqr.velocity_x_desired * (time - lqr.t_off);
-    lqr.position_y_desired = lqr.velocity_y_desired * (time - lqr.t_off);
-    lqr.position_z_desired = lqr.velocity_z_desired * (time - lqr.t_off) + 0.015;
-
-    archive.position_x_desired[i] = lqr.position_x_desired;
-    printf("desired x position: %lf\n", lqr.position_x_desired);
-
-    archive.position_y_desired[i] = lqr.position_y_desired;
-    printf("desired y position: %lf\n", lqr.position_y_desired);
-
-    archive.position_z_desired[i] = lqr.position_z_desired;
-    printf("desired z position: %lf\n", lqr.position_z_desired);
-
-    lqr.state_desired[0] = 0;                       // desired roll angle of drone
-    lqr.state_desired[1] = 0;                       // desired pitch angle of drone
-    lqr.state_desired[2] = 0;                       // desired yaw angle of drone
-    lqr.state_desired[3] = 0;                       // desired x-axis angular velocity of drone
-    lqr.state_desired[4] = 0;                       // desired y-axis angular velocity of drone
-    lqr.state_desired[5] = 0;                       // desired z-axis angular velocity of drone
-    lqr.state_desired[6] = lqr.velocity_x_desired;  // desired i-axis velocity of drone represented in body frame
-    lqr.state_desired[7] = lqr.velocity_y_desired;  // desired j-axis velocity of drone represented in body frame
-    lqr.state_desired[8] = lqr.velocity_z_desired;  // desired k-axis velocity of drone represented in body frame
-    lqr.state_desired[9] = lqr.position_x_desired;  // desired x-axis position of drone
-    lqr.state_desired[10] = lqr.position_y_desired; // desired y-axis position of drone
-    lqr.state_desired[11] = lqr.position_z_desired; // desired z-axis position of drone
+    lqr.state_desired[0] = 0; // desired roll angle of drone
+    lqr.state_desired[1] = 0; // desired pitch angle of drone
+    lqr.state_desired[2] = 0; // desired yaw angle of drone
+    lqr.state_desired[3] = 0; // desired x-axis angular velocity of drone
+    lqr.state_desired[4] = 0; // desired y-axis angular velocity of drone
+    lqr.state_desired[5] = 0; // desired z-axis angular velocity of drone
     
     get_A(&ekf.estimated_state, &ekf.state1, lqr.A); // get state matrix of state equation
     printf("A:\n");
@@ -802,6 +673,48 @@ double LQR_realize(int i){
     printf("]\n");
 
     if (ekf.true_state.position_z > 0.015){
+    
+        // perturbation of control algorithm by keyboard input
+        controller.roll_disturbance = 0.05;  // perturbation of roll angle by keyboard input
+        controller.pitch_disturbance = 0.05; // perturbation of pitch angle by keyboard input
+        controller.yaw_disturbance = 0.05;   // perturbation of yaw angle by keyboard input
+
+        wb_keyboard_enable(TIME_STEP);
+        int key = wb_keyboard_get_key();
+        while (key > 0){
+            switch (key){
+            case WB_KEYBOARD_UP:
+                controller.pitch_disturbance = -2.0;
+                break;
+            case WB_KEYBOARD_DOWN:
+                controller.pitch_disturbance = 2.0;
+                break;
+            case WB_KEYBOARD_RIGHT:
+                controller.yaw_disturbance = -1.3;
+                break;
+            case WB_KEYBOARD_LEFT:
+                controller.yaw_disturbance = 1.3;
+                break;
+            case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_RIGHT):
+                controller.roll_disturbance = -1.0;
+                break;
+            case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_LEFT):
+                controller.roll_disturbance = 1.0;
+                break;
+            case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_UP):
+                lqr.position_z_desired += 0.05;
+                break;
+            case (WB_KEYBOARD_SHIFT + WB_KEYBOARD_DOWN):
+                lqr.position_z_desired -= 0.05;
+                break;
+            }
+            key = wb_keyboard_get_key();
+        }
+        
+        // printf("pitch disturbance: %f\n", controller.pitch_disturbance);
+        // printf("yaw disturbance: %f\n", controller.yaw_disturbance);
+        // printf("roll disturbance: %f\n", controller.roll_disturbance);
+        // printf("desired altitude: %f m\n", lqr.position_z_desired);
 
         // difference of altitude of drone from desired altitude
         controller.altitude_difference = CLAMP(lqr.position_z_desired - ekf.estimated_state.position_z + controller.k_vertical_offset, -1.0, 1.0);
@@ -813,21 +726,21 @@ double LQR_realize(int i){
         archive.control_altitude[i] = controller.control_altitude;
         printf("control_altitude: %lf\n", controller.control_altitude);
 
-        controller.control_roll = lqr.control[1];
+        controller.control_roll = lqr.control[1] + controller.roll_disturbance;
         archive.control_roll[i] = controller.control_roll;
         printf("control_roll: %lf\n", controller.control_roll);
 
         // control input of pitch angle of quadcopter
         controller.control_pitch = lqr.control[2];
-        archive.control_pitch[i] = controller.control_pitch;
+        archive.control_pitch[i] = controller.control_pitch + controller.pitch_disturbance;
         printf("control_pitch: %lf\n", controller.control_pitch);
 
         // control input of yaw angle of quadcopter
         controller.control_yaw = lqr.control[3];
-        archive.control_yaw[i] = controller.control_yaw;
+        archive.control_yaw[i] = controller.control_yaw + controller.yaw_disturbance;
         printf("control_yaw: %lf\n", controller.control_yaw);
 
-        double c1 = 3.0;
+        double c1 = 2.0;
         double c2 = 0.001;
         double c3 = 0.001;
         double c4 = 0.001;
