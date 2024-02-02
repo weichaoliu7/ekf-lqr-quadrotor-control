@@ -62,7 +62,7 @@ int main(int argc, char **argv){
         i++;
     }
 
-    // saveArchive();
+    saveArchive();
 
     wb_robot_cleanup();
 

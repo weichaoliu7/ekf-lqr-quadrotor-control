@@ -1,7 +1,7 @@
 #ifndef SAVEFILE_H
 #define SAVEFILE_H
 
-#define ARRAY_SIZE 1500       // sampling times
+#define ARRAY_SIZE 1000       // sampling times
 
 typedef struct{
     double position_x[ARRAY_SIZE];              // x-axis position of drone
@@ -34,12 +34,6 @@ typedef struct{
     double front_right_motor_input[ARRAY_SIZE]; // input value for front right motor of the quadcopter
     double back_left_motor_input[ARRAY_SIZE];   // input value for back left motor of the quadcopter
     double back_right_motor_input[ARRAY_SIZE];  // input value for back right motor of the quadcopter
-    double position_x_desired[ARRAY_SIZE];      // desired x-axis position of drone
-    double position_y_desired[ARRAY_SIZE];      // desired y-axis position of drone
-    double position_z_desired[ARRAY_SIZE];      // desired z-axis position of drone
-    double velocity_x_desired[ARRAY_SIZE];      // desired x-axis velocity of drone
-    double velocity_y_desired[ARRAY_SIZE];      // desired y-axis velocity of drone
-    double velocity_z_desired[ARRAY_SIZE];      // desired z-axis velocity of drone
 } _archive;
 
 void saveArchiveToTxt(double *archive1, int size, const char *filename);

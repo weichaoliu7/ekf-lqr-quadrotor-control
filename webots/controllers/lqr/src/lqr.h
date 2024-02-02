@@ -9,7 +9,7 @@
 #define n_lqr_observation 6 // number of observation variables of LQR controller
 
 static double t0 = 0.0;     // start time
-static double t1 = 15.0;    // end time
+static double t1 = 10.0;    // end time
 static double I_x = 0.022;  // moment of inertia of drone around x-axis
 static double I_y = 0.022;  // moment of inertia of drone around y-axis
 static double I_z = 0.03;   // moment of inertia of drone around z-axis
